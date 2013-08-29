@@ -7,7 +7,6 @@
 /blib/
 /pm_to_blib
 /.build
-!.gitignore
 *.bs
 .prove
 /xs/*.c
@@ -16,11 +15,11 @@ cover_db
 *.gc??
 test-mydeps-*
 nytprof*
-/inc/
-!.gitignore
 .*.sw?
 SIGNATURE
 README
 LICENSE
 inc/
+/Distar
+/MANIFEST.SKIP
 /Class-Method-Modifiers-*
