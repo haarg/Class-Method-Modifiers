@@ -11,9 +11,10 @@ my %TEST_DEPS = (
 );
 my %RUN_DEPS;
 
-my $mymeta = do { no warnings; $ExtUtils::MakeMaker::VERSION >= 6.57_02 };
-my $mymeta_works = do { no warnings; $ExtUtils::MakeMaker::VERSION >= 6.57_07 };
-my $has_test_requires = do { no warnings; $ExtUtils::MakeMaker::VERSION >= 6.63_03 };
+my $mm_ver = eval $ExtUtils::MakeMaker::VERSION;
+my $mymeta            = $mm_ver >= 6.57_02;
+my $mymeta_works      = $mm_ver >= 6.57_07;
+my $has_test_requires = $mm_ver >= 6.63_03;
 if (not $has_test_requires) {
   %BUILD_DEPS = (%BUILD_DEPS, %TEST_DEPS);
   %TEST_DEPS = ();
@@ -32,17 +33,19 @@ WriteMakefile(
   keys %BUILD_DEPS ? ( BUILD_REQUIRES => \%BUILD_DEPS ) : (),
   keys %TEST_DEPS  ? ( TEST_REQUIRES  => \%TEST_DEPS  ) : (),
 
-  META_MERGE => {
+  -f 'META.yml' ? () : (META_MERGE => {
     'meta-spec' => { version => 2 },
     dynamic_config => 0,
-    repository => {
-      url => 'git://github.com/karenetheridge/Class-Method-Modifiers.git',
-      web => 'http://github.com/karenetheridge/Class-Method-Modifiers',
-      type => 'git',
-    },
-    bugtracker => {
-      web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Class-Method-Modifiers',
-      mailto => 'bug-Class-Method-Modifiers@rt.cpan.org',
+    resources => {
+      repository => {
+        url => 'git://github.com/karenetheridge/Class-Method-Modifiers.git',
+        web => 'http://github.com/karenetheridge/Class-Method-Modifiers',
+        type => 'git',
+      },
+      bugtracker => {
+        web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Class-Method-Modifiers',
+        mailto => 'bug-Class-Method-Modifiers@rt.cpan.org',
+      },
     },
     prereqs => {
       runtime   => { requires => { perl => '5.006' } },
@@ -50,6 +53,6 @@ WriteMakefile(
         'Class::MOP' => 0,
       } },
     },
-  },
+  }),
   ($mymeta && !$mymeta_works ? (NO_MYMETA => 1) : ()),
 );
